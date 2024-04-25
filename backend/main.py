@@ -8,9 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from decouple import config
 import openai
 
-
 # Custom Function Imports
-# ...
+from functions.openai_requests import convert_audio_to_text
 
 
 # Initiate App
