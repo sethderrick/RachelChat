@@ -11,6 +11,7 @@ import openai
 # Custom Function Imports
 from functions.openai_requests import convert_audio_to_text, get_chat_response
 from functions.database import store_messages, reset_messages
+from functions.text_to_speech import convert_text_to_speech
 
 
 # Initiate App
@@ -66,12 +67,26 @@ async def get_audio():
     # Get ChatGPT Response
     chat_response = get_chat_response(message_decoded)
 
+    # Guard: Ensure received chat response
+    if not chat_response:
+        return HTTPException(status_code=400, detail="Failed to get chat response")
+
     # Store messages
     store_messages(message_decoded, chat_response)
 
-    print(chat_response)
+    # Convert chat response to audio
+    audio_output = convert_text_to_speech(chat_response)
 
-    return "Done"
+    # Guard: Ensure received Eleven Labs response
+    if not audio_output:
+        return HTTPException(status_code=400, detail="Failed to get Eleven Labs audio response")
+    
+    # Create generator that returns chunks of data
+    def iterfile():
+        yield audio_output
+
+    # Return audio file
+    return StreamingResponse(iterfile(), media_type="audio/mpeg")
 
 
 # # Post bot response
