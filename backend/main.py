@@ -34,7 +34,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
- 
+
 
 # Check health
 @app.get("/health")
@@ -51,7 +51,7 @@ async def get_audio():
 
     # Decode audio
     message_decoded = convert_audio_to_text(audio_input)
-    
+
     print(message_decoded)
 
     return "Done"
