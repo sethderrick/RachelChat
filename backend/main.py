@@ -44,6 +44,8 @@ async def check_health():
     return {"message": "healthy"}
 
 # Reset Messages
+
+
 @app.get("/reset")
 async def reset_conversation():
     reset_messages()
@@ -51,11 +53,16 @@ async def reset_conversation():
 
 
 # Get audio
-@app.get("/post-audio-get/")
-async def get_audio():
+@app.post("/post-audio /")
+async def post_audio(file: UploadFile = File(...)):
 
-    # Get saved audio
-    audio_input = open("voice.mp3", "rb")
+    # # Get saved audio
+    # audio_input = open("voice.mp3", "rb")
+
+    # Save file from frontend
+    with open(file.filename, "wb") as buffer:
+        buffer.write(file.file.read())
+    audio_input = open(file.filename, "rb")
 
     # Decode audio
     message_decoded = convert_audio_to_text(audio_input)
@@ -63,7 +70,7 @@ async def get_audio():
     # Guard: Ensure message decoded
     if not message_decoded:
         return HTTPException(status_code=400, detail="Failed to decode audio")
-    
+
     # Get ChatGPT Response
     chat_response = get_chat_response(message_decoded)
 
@@ -80,13 +87,13 @@ async def get_audio():
     # Guard: Ensure received Eleven Labs response
     if not audio_output:
         return HTTPException(status_code=400, detail="Failed to get Eleven Labs audio response")
-    
+
     # Create generator that returns chunks of data
     def iterfile():
         yield audio_output
 
     # Return audio file
-    return StreamingResponse(iterfile(), media_type="audio/mpeg")
+    return StreamingResponse(iterfile(), media_type="application/octet-stream")
 
 
 # # Post bot response
