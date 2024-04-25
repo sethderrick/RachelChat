@@ -41,6 +41,22 @@ app.add_middleware(
 async def check_health():
     return {"message": "healthy"}
 
+
+# Get audio
+@app.get("/post-audio-get/")
+async def get_audio():
+
+    # Get saved audio
+    audio_input = open("voice.mp3", "rb")
+
+    # Decode audio
+    message_decoded = convert_audio_to_text(audio_input)
+    
+    print(message_decoded)
+
+    return "Done"
+
+
 # # Post bot response
 # # Note: Not playing in browswer when using post request
 # @app.post("/post-audio/")
