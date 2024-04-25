@@ -10,6 +10,7 @@ import openai
 
 # Custom Function Imports
 from functions.openai_requests import convert_audio_to_text, get_chat_response
+from functions.database import store_messages, reset_messages
 
 
 # Initiate App
@@ -41,6 +42,12 @@ app.add_middleware(
 async def check_health():
     return {"message": "healthy"}
 
+# Reset Messages
+@app.get("/reset")
+async def reset_conversation():
+    reset_messages()
+    return {"message": "converation reset"}
+
 
 # Get audio
 @app.get("/post-audio-get/")
@@ -58,6 +65,9 @@ async def get_audio():
     
     # Get ChatGPT Response
     chat_response = get_chat_response(message_decoded)
+
+    # Store messages
+    store_messages(message_decoded, chat_response)
 
     print(chat_response)
 
