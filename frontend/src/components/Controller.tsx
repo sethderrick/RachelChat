@@ -3,16 +3,16 @@ import Title from "./Title";
 import RecordMessage from "./RecordMessage";
 import axios from "axios";
 
-function Controller() {
+const Controller = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
 
   // convert data from backend to useable format
-  const createBlobUrl = (data: any) => {
+  function createBlobURL(data: any) {
     const blob = new Blob([data], { type: "audio/mpeg" });
     const url = window.URL.createObjectURL(blob);
     return url;
-  };
+  }
 
   const handleStop = async (blobUrl: string) => {
     setIsLoading(true);
@@ -25,7 +25,7 @@ function Controller() {
     fetch(blobUrl)
       .then((res) => res.blob())
       .then(async (blob) => {
-        // Construct audio
+        // Construct audio to send file
         const formData = new FormData();
         formData.append("file", blob, "myFile.wav");
 
@@ -33,12 +33,12 @@ function Controller() {
         await axios
           .post("http://127.0.0.1:8000/post-audio", formData, {
             headers: { "Content-Type": "audio/mpeg" },
-            responseType: "arraybuffer",
+            responseType: "arraybuffer", // Set response type to handle binary data
           })
           .then((res: any) => {
             const blob = res.data;
             const audio = new Audio();
-            audio.src = createBlobUrl(blob);
+            audio.src = createBlobURL(blob);
 
             // Append to audio
             const rachelMessage = { sender: "rachel", blobUrl: audio.src };
@@ -58,11 +58,13 @@ function Controller() {
 
   return (
     <div className="h-screen overflow-y-hidden">
+      {/* Title */}
       <Title setMessages={setMessages} />
+
       <div className="flex flex-col justify-between h-full overflow-y-scroll pb-96">
         {/* Conversation */}
         <div className="mt-5 px-5">
-          {messages.map((audio, index) => {
+          {messages?.map((audio, index) => {
             return (
               <div
                 key={index + audio.sender}
@@ -116,6 +118,6 @@ function Controller() {
       </div>
     </div>
   );
-}
+};
 
 export default Controller;

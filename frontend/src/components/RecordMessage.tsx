@@ -1,10 +1,11 @@
 import { ReactMediaRecorder } from "react-media-recorder";
 import RecordIcon from "./RecordIcon";
+
 type Props = {
   handleStop: any;
 };
 
-function RecordMessage({ handleStop }: Props) {
+const RecordMessage = ({ handleStop }: Props) => {
   return (
     <ReactMediaRecorder
       audio
@@ -29,6 +30,6 @@ function RecordMessage({ handleStop }: Props) {
       )}
     />
   );
-}
+};
 
 export default RecordMessage;

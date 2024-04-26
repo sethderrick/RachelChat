@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 
 type Props = {
-  setMessages: (messages: any[]) => void;
+  setMessages: any;
 };
 
 function Title({ setMessages }: Props) {
@@ -13,7 +13,11 @@ function Title({ setMessages }: Props) {
     setIsResetting(true);
 
     await axios
-      .get("http://127.0.0.1:8000/reset")
+      .get("http://127.0.0.1:8000/reset", {
+        headers: {
+          "Content-Type": "application/json",
+        },  
+      })
       .then((res) => {
         if (res.status === 200) {
           setMessages([]);
