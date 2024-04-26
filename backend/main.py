@@ -94,11 +94,3 @@ async def post_audio(file: UploadFile = File(...)):
 
     # Return audio file
     return StreamingResponse(iterfile(), media_type="application/octet-stream")
-
-
-# # Post bot response
-# # Note: Not playing in browswer when using post request
-# @app.post("/post-audio/")
-# async def post_audio(file: UploadFile = File(...)):
-
-#     print("hello")
