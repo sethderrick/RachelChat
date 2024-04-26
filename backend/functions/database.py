@@ -1,15 +1,15 @@
+import os
 import json
 import random
 
-# Get recent functions
-
-
+# Save messages for retrieval later on
 def get_recent_messages():
-    # Define the file name and learn instruction
+
+    # Define the file name and learn prompt instructions
     file_name = "stored_data.json"
     learn_instruction = {
         "role": "system",
-        "content": "You are interviewing the user for a job as a retail assistant. Ask short questions that are relevant to the junior position. Your name is Rachel. The users's name is Seth. Keep your answers to under 30 words.",
+        "content": "You are a Spanish teacher and your name is Rachel, the user is called Seth. Keep responses under 30 words. ",
     }
 
     # Initialize messages
@@ -17,15 +17,20 @@ def get_recent_messages():
 
     # Add a random element
     x = random.uniform(0, 1)
-    if x < 0.5:
+    if x < 0.2:
         learn_instruction["content"] = (
             learn_instruction["content"]
-            + " Your response will include some dry humour."
+            + " Your response will include some dry humour. "
+        )
+    elif x < 0.5:
+        learn_instruction["content"] = (
+            learn_instruction["content"]
+            + " Your response will include an interesting new fact about Spain. "
         )
     else:
         learn_instruction["content"] = (
             learn_instruction["content"]
-            + " Your response will include a rather challenging question."
+            + " Your response will recommend another word to learn. "
         )
 
     # Append instruction to message
@@ -36,7 +41,7 @@ def get_recent_messages():
         with open(file_name) as user_file:
             data = json.load(user_file)
 
-            # Append last 5 items of data
+            # Append last 5 rows of data
             if data:
                 if len(data) < 5:
                     for item in data:
@@ -51,10 +56,9 @@ def get_recent_messages():
     # Return
     return messages
 
-# Store messages
-
-
+# Save messages for retrieval later on
 def store_messages(request_message, response_message):
+    
     # Define the file name
     file_name = "stored_data.json"
 
