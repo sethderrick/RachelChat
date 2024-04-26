@@ -8,7 +8,9 @@ function Controller() {
 
   const createBlobUrl = (data: any) => {};
 
-  const handleStop = async () => {};
+  const handleStop = async () => {
+    alert("hello");
+  };
 
   return (
     <div className="h-screen overflow-y-hidden">
